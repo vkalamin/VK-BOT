@@ -26,15 +26,17 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: 24.x
-        # এখানে 'cache: npm' লাইনটি বাদ দেওয়া হয়েছে যাতে লক ফাইল না খুঁজেই পার হয়ে যায়
+        # লক ফাইল ছাড়া ক্যাশ লক এরর এড়াতে এখানে cache অপশনটি বাদ দেওয়া হয়েছে
 
     - name: Install Dependencies
       run: |
-        npm install # এখানে npm ci এর বদলে npm install দেওয়া হয়েছে, যা অটোমেটিক লক ফাইল তৈরি করে নিবে
+        npm install # npm ci এর বদলে npm install ব্যবহার করা হয়েছে যাতে লক ফাইল অটোমেটিক জেনারেট হয়
 
     - name: Create AppState File from Secret
+      env:
+        APPSTATE_DATA: ${{ secrets.BADOL_APPSTATE }}
       run: |
-        echo '${{ secrets.BADOL_APPSTATE }}' > BADOL-Appstate.json
+        echo "$APPSTATE_DATA" > BADOL-Appstate.json # env ব্যবহার করায় বড় এবং জটিল JSON ডেটাও এখন ফাইলটিতে নিখুঁতভাবে রাইট হবে
 
     - name: Start BADOL-BOT V5
       run: npm start
