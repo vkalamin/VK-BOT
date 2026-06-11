@@ -101,9 +101,9 @@ ${prefix}help
                 const newUserName = user.fullName;
 
                 const memberMsg =
-`╔════════════════════╗
+`╔═══════════════════╗
 ║ 🎉 𝗪𝗘𝗟𝗖𝗢𝗠𝗘 🎉 ║
-╚════════════════════╝
+╚═══════════════════╝
 
 👤 𝗡𝗲𝘄 𝗠𝗲𝗺𝗯𝗲𝗿 : ${newUserName}
 ➕ 𝗔𝗱𝗱𝗲𝗱 𝗕𝘆 : ${adderName}
