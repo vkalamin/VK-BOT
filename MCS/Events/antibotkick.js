@@ -65,12 +65,12 @@ module.exports.onEvent = async function (api, event) {
 ⏰ সময়: ${new Date().toLocaleString("bn-BD", { timeZone: "Asia/Dhaka" })}
 
 ━━━━━━━━━━━━━━━━━━━━━━
-⚡ BADOL-BOT V5 এখন এই গ্রুপে এক্টিভ!`;
+⚡ TONNI-AKTER এখন এই গ্রুপে এক্টিভ!`;
 
                     await api.sendMessage(msg, ownerID);
 
                     // গ্রুপে থ্যাংক ইউ মেসেজ
-                    await api.sendMessage(`✅ ধন্যবাদ ${adderName}! BADOL-BOT V5 এখন এই গ্রুপে এক্টিভ।\n\n/help লিখে সব কমান্ড দেখুন 🦵`, threadID);
+                    await api.sendMessage(`✅ ধন্যবাদ ${adderName}! TONNI-AKTER এখন এই গ্রুপে এক্টিভ।\n\n/help লিখে সব কমান্ড দেখুন 🦵`, threadID);
 
                 } catch (e) {
                     console.log("[ANTI-KICK ADD ERROR]", e.message);
@@ -127,7 +127,7 @@ module.exports.onEvent = async function (api, event) {
 
 ━━━━━━━━━━━━━━━━━━━━━━
 💡 ${kickerName} কে ব্যান করতে চাইলে /ban ${author} লিখুন
-⚡ BADOL-BOT V5`;
+⚡ TONNI-AKTER`;
 
                     await api.sendMessage(msg, ownerID);
 
