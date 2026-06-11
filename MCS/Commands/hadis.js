@@ -86,7 +86,7 @@ module.exports.onStart = async function (api, event, args) {
         stylishMsg += `» ${randomCaption} «\n\n`;
         stylishMsg += `━━━━━━━━━━━━━━━━━━━━\n`;
         stylishMsg += `👤 **Receiver:** ${name}\n`;
-        stylishMsg += `🛡️ **DEV:** MOHAMMAD BADOL\n`;
+        stylishMsg += `🛡️ **DEV:** SAEEM SHEIKH\n`;
         stylishMsg += `━━━━━━━━━━━━━━━━━━━━`;
 
         const cacheDir = __dirname + `/cache`;
