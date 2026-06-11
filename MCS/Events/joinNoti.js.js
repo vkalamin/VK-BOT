@@ -37,7 +37,7 @@ module.exports = {
         const config = getConfig();
 
         // ছবির লিংক - Drive ডাউনলোড লিংক
-        const imgURL = "https://drive.google.com/uc?export=download&id=1QbYtELhnXdMrST3F4e3ULU3vMNvr8pGP";
+        const imgURL = "https://drive.google.com/uc?export=view&id=1HV--VPcV90f99PIWylHqyNdsdJr_wDpc";
 
         // গ্রুপের তথ্য
         const threadInfo = await api.getThreadInfo(threadID);
