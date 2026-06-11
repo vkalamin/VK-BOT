@@ -15,7 +15,7 @@ module.exports = {
         role: 0,
         cooldown: 5,
         prefix: true,
-        credit: "MOHAMMAD BADOL"
+        credit: "SAEEM SHEIKH"
     },
 
     onStart: async (api, event, args) => {
