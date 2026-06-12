@@ -5,10 +5,10 @@ const axios = require("axios");
 module.exports = {
     config: {
         name: "approve",
-        version: "3.1.1",
+        version: "3.1.2",
         credit: "MOHAMMAD BADOL",
         role: 1,
-        description: "Approve pending threads + custom owner pic",
+        description: "Approve pending threads permanent + auto dynamic sync",
         prefix: true,
         aliases: ["apv"],
         cooldown: 5
@@ -41,9 +41,8 @@ module.exports = {
                     }
                 }
 
-                fs.writeFileSync(configPath, JSON.stringify(config, null, 4));
-                
-                // [FIXED] মেইন ফাইলের ক্যাশ মেমোরি রিফ্রেশ
+                // সিঙ্ক্রোনাস রাইট নিশ্চিত করা হয়েছে যাতে কোনো ডেটা লস না হয়
+                fs.writeFileSync(configPath, JSON.stringify(config, null, 4), "utf-8");
                 if (typeof global.reloadConfig === "function") global.reloadConfig();
 
                 await api.deleteMessage(waitMsg.messageID);
@@ -93,24 +92,26 @@ module.exports = {
         const targetGroup = config.APPROVAL_SYSTEM.PENDING_THREADS[index];
         const ownerName = config.OWNER_LOCK.NAME;
 
-        config.APPROVAL_SYSTEM.APPROVED_THREADS.push(targetGroup.id);
+        // ডাবল চেক প্রোটেকশন: গ্রুপটি অলরেডি লিস্টে থাকলে আর পুশ করবে না
+        if (!config.APPROVAL_SYSTEM.APPROVED_THREADS.includes(targetGroup.id)) {
+            config.APPROVAL_SYSTEM.APPROVED_THREADS.push(targetGroup.id);
+        }
+        
         config.APPROVAL_SYSTEM.PENDING_THREADS.splice(index, 1);
-        fs.writeFileSync(configPath, JSON.stringify(config, null, 4));
-
-        // [FIXED] মেইন ফাইলের ক্যাশ মেমোরি রিফ্রেশ (যাতে মেইন ফাইল সাথে সাথে বুঝতে পারে গ্রুপটি Approved)
+        
+        // সিঙ্ক্রোনাসলি ফাইলে সেভ এবং ইনস্ট্যান্ট গ্লোবাল ক্যাশ রিফ্রেশ
+        fs.writeFileSync(configPath, JSON.stringify(config, null, 4), "utf-8");
         if (typeof global.reloadConfig === "function") global.reloadConfig();
 
-        // 🔥 তোমার Google Drive ছবি
+        // 🔥 Google Drive ছবি লিঙ্ক
         const driveFileId = "1ITONZqIZdgshuwVC1Sgk1KservMD9lMT";
-        const driveDownloadUrl = `https://drive.google.com/file/d/1HV--VPcV90f99PIWylHqyNdsdJr_wDpc/view?usp=drivesdk=${driveFileId}`;
+        const driveDownloadUrl = `https://drive.google.com/uc?export=download&id=${driveFileId}`;
 
         try {
-            // ছবি ডাউনলোড
             const imgPath = path.join(__dirname, `../../temp_approve_${Date.now()}.jpg`);
             const imgRes = await axios.get(driveDownloadUrl, { responseType: "arraybuffer", timeout: 15000 });
             fs.writeFileSync(imgPath, Buffer.from(imgRes.data, "binary"));
 
-            // মেসেজ + ছবি পাঠাও
             const approvalMsg =
 `━━━━━━━━━━━━━━━━━━━━━━
    ✅ GROUP APPROVED
@@ -126,7 +127,7 @@ Your group has been successfully approved.
 ━━━━━━━━━━━━━━━━━━━━━━
 ✨ All bot features are now unlocked!
 💬 Type ${config.BOT_INFO.PREFIX}help to see commands
-🔥 Enjoy using TONNI-AKTER
+🔥 Enjoy using BADOL-BOT V5
 ━━━━━━━━━━━━━━━━━━━━━━`;
 
             await api.sendMessage({
@@ -134,11 +135,10 @@ Your group has been successfully approved.
                 attachment: fs.createReadStream(imgPath)
             }, targetGroup.id);
 
-            // টেম্প ফাইল ডিলিট
             if (fs.existsSync(imgPath)) fs.unlinkSync(imgPath);
 
         } catch (e) {
-            // ছবি না পাইলে শুধু টেক্সট পাঠাও
+            // ছবি ডাউনলোডে বা পাঠাতে সমস্যা হলে ব্যাকআপ হিসেবে শুধু টেক্সট মেসেজ যাবে
             await api.sendMessage(
                 `━━━━━━━━━━━━━━━━━━━━━━\n ✅ GROUP APPROVED \n━━━━━━━━━━━━━━━━━━━━━━\n\n` +
                 `🎉 Congratulations! Your group has been approved by ${ownerName}.\n` +
@@ -149,7 +149,7 @@ Your group has been successfully approved.
             console.error("[APPROVE] Image send failed:", e.message);
         }
 
-        // এডমিনকে কনফার্মেশন
+        // ওনার/এডমিনকে কনফার্মেশন মেসেজ
         api.sendMessage(
             `━━━━━━━━━━━━━━━━━━━━━━\n ✅ GROUP APPROVED \n━━━━━━━━━━━━━━━━━━━━━━\n\n` +
             `Successfully approved: ${targetGroup.name}\n` +
