@@ -26,7 +26,7 @@ module.exports = {
         }
 
         const currentPrefix = config.BOT_INFO?.PREFIX || "/";
-        const botName = config.BOT_INFO?.BOT_NAME || "TONNI BOT";
+        const botName = config.BOT_INFO?.BOT_NAME || "TONNI-AKTER";
         const ownerName = "SAEEM SHEIKH";
         const imgURL = "https://drive.google.com/file/d/1PNL47Xm-Zv1d7LBpSVBL-cAqCq_UGyXs/view?usp=drivesdk";
 
