@@ -34,7 +34,7 @@ module.exports = {
             const msg = `╭───❍ 𝐏𝐫e𝐟𝐢𝐱-𝐈𝐧𝐟𝐨 ❍───╮\n┏━━━━━━━━━━━━━━━━━━━❥\n` +
                         `├‣ ✿ 𝐁𝐨𝐭 𝐍𝐚𝐦𝐞: ${botName}\n` +
                         `├‣ ✿ 𝐏𝐫𝐞𝐟𝐢𝐱: [ ${currentPrefix} ]\n` +
-                        `├‣ ✿ 𝐓𝐲𝐩𝐞: ${currentPrefix}𝐡𝐞𝐥𝐩\n` +
+                        `├‣ ✿ 𝐓𝐲𝐩𝐞: ${currentPrefix}help\n` +
                         `├‣ ✿ 𝐃e𝐯: ${ownerName}\n` +
                         `┗━━━━━━━━━━━━━━━━━━━❥\n\n` +
                         `𝄞⋆⃝🧚‍${botName}🧚‍⋆⃝𝄞\n` +
