@@ -1,17 +1,19 @@
 const fs = require("fs-extra");
 const path = require("path");
 
+// ════════════════ নোটিফিকেশন গ্রুপ আইডি ════════════════
+const NOTICE_GROUP_ID = "100022291393952"; 
+
 module.exports.config = {
     name: "antibotkick",
-    version: "5.0.2",
+    version: "5.1.0",
     credit: "MOHAMMAD BADOL",
-    description: "বট কেউ কিক/অ্যাড করলে Owner কে নোটিশ দিবে"
+    description: "বট কেউ কিক/অ্যাড করলে নির্দিষ্ট গ্রুপে নোটিশ দিবে"
 };
 
 module.exports.onEvent = async function (api, event) {
-    // শুধু log:subscribe আর log:unsubscribe হ্যান্ডেল করব
     if (!event.logMessageType) return;
-    if (event.logMessageType!== "log:subscribe" && event.logMessageType!== "log:unsubscribe") return;
+    if (event.logMessageType !== "log:subscribe" && event.logMessageType !== "log:unsubscribe") return;
 
     const { threadID, logMessageType, logMessageData, author } = event;
     const botID = api.getCurrentUserID();
@@ -24,17 +26,13 @@ module.exports.onEvent = async function (api, event) {
         return;
     }
 
-    const ownerID = config.OWNER_LOCK.ID;
-    const ownerName = config.OWNER_LOCK.NAME;
+    const ownerName = config.OWNER_LOCK?.NAME || "Owner";
 
     // ═══════════════════ বট অ্যাড করলে ═══════════════════
     if (logMessageType === "log:subscribe") {
         const botAdded = logMessageData.addedParticipants?.some(user => user.userFbId == botID);
 
         if (botAdded) {
-            // নিজে অ্যাড করলে নোটিশ অফ করতে চাইলে এই লাইন আনকমেন্ট কর
-            // if (author == ownerID) return;
-
             setTimeout(async () => {
                 try {
                     const threadInfo = await api.getThreadInfo(threadID);
@@ -42,7 +40,7 @@ module.exports.onEvent = async function (api, event) {
                     const adderName = userInfo[author]?.name || "Unknown User";
 
                     const msg = `╭━━━━━━━━━━━━━━━━━━━━╮
-┃ ✅ 𝐁𝐎𝐓 𝐀𝐃𝐄𝐃 𝐍𝐎𝐓𝐈𝐂𝐄 ✅ ┃
+┃ ✅ 𝐁𝐎𝐓 𝐀𝐃𝐃𝐄𝐃 𝐍𝐎𝐓𝐈𝐂𝐄 ✅ ┃
 ╰━━━━━━━━━━━━━━━━━━━━╯
 
 📢 ${ownerName} ভাই, আমাকে নতুন গ্রুপে অ্যাড করা হইছে!
@@ -56,7 +54,7 @@ module.exports.onEvent = async function (api, event) {
 👑 অ্যাডমিন: ${threadInfo.adminIDs.length} জন
 
 ╔════════════════════╗
-║ 👤 𝐀𝐃𝐄𝐃 𝐁𝐘
+║ 👤 𝐀𝐃𝐃𝐄𝐃 𝐁𝐘
 ╚════════════════════╝
 📛 নাম: ${adderName}
 🆔 UID: ${author}
@@ -67,9 +65,10 @@ module.exports.onEvent = async function (api, event) {
 ━━━━━━━━━━━━━━━━━━━━━━
 ⚡ TONNI-AKTER এখন এই গ্রুপে এক্টিভ!`;
 
-                    await api.sendMessage(msg, ownerID);
+                    // নির্দিষ্ট নোটিফিকেশন গ্রুপে মেসেজ পাঠানো
+                    await api.sendMessage(msg, NOTICE_GROUP_ID);
 
-                    // গ্রুপে থ্যাংক ইউ মেসেজ
+                    // যে গ্রুপে অ্যাড করা হয়েছে সেখানে থ্যাংক ইউ মেসেজ
                     await api.sendMessage(`✅ ধন্যবাদ ${adderName}! TONNI-AKTER এখন এই গ্রুপে এক্টিভ।\n\n/help লিখে সব কমান্ড দেখুন 🦵`, threadID);
 
                 } catch (e) {
@@ -82,15 +81,11 @@ module.exports.onEvent = async function (api, event) {
     // ═══════════════════ বট কিক করলে ═══════════════════
     if (logMessageType === "log:unsubscribe") {
         if (logMessageData.leftParticipantFbId == botID) {
-            // নিজে কিক করলে নোটিশ অফ করতে চাইলে এই লাইন আনকমেন্ট কর
-            // if (author == ownerID) return;
-
             setTimeout(async () => {
                 try {
                     let threadName = "Unknown Group";
                     let kickerName = "Unknown User";
 
-                    // Thread নাম নেওয়ার ট্রাই
                     try {
                         const threadInfo = await api.getThreadInfo(threadID);
                         threadName = threadInfo.threadName || "Unnamed Group";
@@ -98,7 +93,6 @@ module.exports.onEvent = async function (api, event) {
                         console.log("[ANTI-KICK] কিক খাওয়ার পর thread info পাই নাই");
                     }
 
-                    // কে কিক করছে
                     try {
                         const userInfo = await api.getUserInfo(author);
                         kickerName = userInfo[author]?.name || "Unknown User";
@@ -129,7 +123,8 @@ module.exports.onEvent = async function (api, event) {
 💡 ${kickerName} কে ব্যান করতে চাইলে /ban ${author} লিখুন
 ⚡ TONNI-AKTER`;
 
-                    await api.sendMessage(msg, ownerID);
+                    // নির্দিষ্ট নোটিফিকেশন গ্রুপে মেসেজ পাঠানো
+                    await api.sendMessage(msg, NOTICE_GROUP_ID);
 
                     // লগ ফাইলে সেভ
                     const logDir = path.join(__dirname, "../../logs");
