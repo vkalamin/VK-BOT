@@ -202,7 +202,7 @@ module.exports.onStart = async (api, event, args) => {
 
     const captionText = `✨ 𝐬𝐔𝚫𝚴𝚯𝐔𝚳 𝚩𝚯𝚯𝐒 𝐒𝐘𝐒𝚯𝚳 ✨\n` +
         `━━━━━━━━━━━━━━━━━━━━\n` +
-        `👑 𝗗𝗲𝘃𝗲լ𝗼𝗽𝗲𝗿: MOHAMMAD BADOL\n` +
+        `👑 𝗗𝗲𝘃𝗲լ𝗼𝗽𝗲𝗿: SAEEM SHEIKH\n` +
         `⏱️ 𝗨𝗽𝘁𝗶𝗺𝗲: ${uptimeStr}\n` +
         `⚡ 𝗟𝗮𝘁𝗲𝗻𝗰𝘆: ${ping} MS\n` +
         `📊 奠𝗔𝗠: ${usedRam} / ${totalRam} GB\n` +
