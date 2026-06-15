@@ -1,31 +1,34 @@
+const fs = require("fs");
+const path = require("path");
+const axios = require("axios");
 const moment = require("moment-timezone");
 
 module.exports.config = {
   name: "namaz",
-  version: "5.1.0",
+  version: "5.2.0",
   role: 0,
   credit: "MOHAMMAD BADOL",
-  description: "namaz time",
+  description: "Namaz time with video alert",
   category: "islamic",
   prefix: true,
   cooldown: 5
 };
 
-// 🔥 এখানে টাইম চেঞ্জ করো - ২৪ ঘন্টা ফরম্যাট
-// গাইড: ভোর ৪টা = "04:00", দুপুর ১২টা = "12:00", দুপুর ১টা = "13:00",
-// বিকাল ৫টা = "17:00", সন্ধ্যা ৬টা = "18:00", রাত ৮টা = "20:00"
-
 const PRAYER_TIMES = [
-  { name: "ফজর", time: "04:15", emoji: "🌅", desc: "ভোরের নামাজ" }, // ভোর ৪:১৫
-  { name: "যোহর", time: "13:00", emoji: "☀️", desc: "দুপুরের নামাজ" }, // দুপুর ১:০০
-  { name: "আসর", time: "17:00", emoji: "🌤️", desc: "বিকালের নামাজ" }, // বিকাল ৫:০০
-  { name: "মাগরিব", time: "19:10", emoji: "🌆", desc: "সন্ধ্যার নামাজ" }, // সন্ধ্যা ৭:১০
-  { name: "এশা", time: "20:10", emoji: "🌙", desc: "রাতের নামাজ" } // রাত ৮:১০
+  { name: "ফজর", time: "04:15", emoji: "🌅", desc: "ভোরের নামাজ" }, 
+  { name: "যোহর", time: "13:00", emoji: "☀️", desc: "দুপুরের নামাজ" }, 
+  { name: "আসর", time: "17:00", emoji: "🌤️", desc: "বিকালের নামাজ" }, 
+  { name: "মাগরিব", time: "19:10", emoji: "🌆", desc: "সন্ধ্যার নামাজ" }, 
+  { name: "এশা", time: "20:10", emoji: "🌙", desc: "রাতের নামাজ" } 
 ];
 
 const BN_DIGITS = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
 const BN_DAYS = ["রবিবার", "সোমবার", "মঙ্গলবার", "বুধবার", "বৃহস্পতিবার", "শুক্রবার", "শনিবার"];
 const BN_MONTHS = ["জানুয়ারি", "ফেব্রুয়ারি", "মার্চ", "এপ্রিল", "মে", "জুন", "জুলাই", "আগস্ট", "সেপ্টেম্বর", "অক্টোবর", "নভেম্বর", "ডিসেম্বর"];
+
+// গুগল ড্রাইভের ভিডিও আইডি থেকে ডিরেক্ট ডাউনলোড লিংক জেনারেট
+const VIDEO_URL = "https://docs.google.com/uc?export=download&id=1bqXZRJ9Ji2AinVh3t9ATFThVQrD4DZ35";
+const CACHE_VIDEO_PATH = path.join(__dirname, "cache_namaz_video.mp4");
 
 function toBanglaNum(n) {
   return String(n).replace(/[0-9]/g, d => BN_DIGITS[+d]);
@@ -34,9 +37,30 @@ function toBanglaNum(n) {
 function convertTo12Hour(time24) {
   const [hour, minute] = time24.split(":");
   let h = parseInt(hour);
-  const ampm = h >= 12? "PM" : "AM";
+  const ampm = h >= 12 ? "PM" : "AM";
   h = h % 12 || 12;
   return `${toBanglaNum(h)}:${toBanglaNum(minute)} ${ampm}`;
+}
+
+async function downloadVideo() {
+  try {
+    const response = await axios({
+      method: "GET",
+      url: VIDEO_URL,
+      responseType: "stream",
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.0.0 Safari/537.36'
+      }
+    });
+    const writer = fs.createWriteStream(CACHE_VIDEO_PATH);
+    response.data.pipe(writer);
+    return new Promise((resolve, reject) => {
+      writer.on("finish", resolve);
+      writer.on("error", reject);
+    });
+  } catch (e) {
+    console.log("[NAMAZ] Video download failed: " + e.message);
+  }
 }
 
 async function sendPrayerAlert(api, prayer) {
@@ -51,7 +75,7 @@ async function sendPrayerAlert(api, prayer) {
   const date = toBanglaNum(now.format("DD")) + " " + BN_MONTHS[now.month()] + " " + toBanglaNum(now.format("YYYY"));
   const day = BN_DAYS[now.day()];
 
-  const msg = `╔═══════════════════╗
+  const msgText = `╔═══════════════════╗
 ║ 🕌 নামাজের সময় 🕌 ║
 ╚═══════════════════╝
 
@@ -68,14 +92,23 @@ ${prayer.emoji} ${prayer.name} এর ওয়াক্ত শুরু হয়ে�
 🕋 জামাতে নামাজ পড়ার চেষ্টা করুন
 
 ═══════════════════
-    আল্লাহ হাফেজ
+    🌺আল্লাহ হাফেজ🌺
 ═══════════════════`;
 
-  console.log(`[NAMAZ] Sending ${prayer.name} alert to ${threads.length} groups`);
+  console.log(`[NAMAZ] Sending ${prayer.name} alert to ${threads.length} groups with video`);
+
+  if (!fs.existsSync(CACHE_VIDEO_PATH)) {
+    await downloadVideo();
+  }
+
+  let msgPayload = { body: msgText };
+  if (fs.existsSync(CACHE_VIDEO_PATH) && fs.statSync(CACHE_VIDEO_PATH).size > 0) {
+    msgPayload.attachment = fs.createReadStream(CACHE_VIDEO_PATH);
+  }
 
   for (const tid of threads) {
     try {
-      await api.sendMessage(msg, tid);
+      await api.sendMessage(msgPayload, tid);
       await new Promise(r => setTimeout(r, 2000));
     } catch (e) {
       console.log(`[NAMAZ] Failed ${tid}`);
@@ -115,6 +148,10 @@ function schedulePrayers(api) {
 }
 
 module.exports.onLoad = async function ({ api }) {
+  if (!fs.existsSync(CACHE_VIDEO_PATH)) {
+    downloadVideo();
+  }
+  
   schedulePrayers(api);
   const now = moment.tz("Asia/Dhaka");
   let nextMidnight = moment.tz("Asia/Dhaka").add(1, "day").startOf("day").add(1, "minute");
@@ -125,66 +162,4 @@ module.exports.onLoad = async function ({ api }) {
     setInterval(() => schedulePrayers(api), 86400000);
   }, msUntilMidnight);
 
-  console.log("[NAMAZ] All prayer times scheduled - Stylish Mode");
-};
-
-module.exports.onStart = async function (api, event, args) {
-  const { threadID, messageID, senderID } = event;
-  const config = require("../../config.json");
-  const prefix = config.BOT_INFO.PREFIX;
-  const isAdmin = config.ADMIN_SYSTEM.ADMINS.includes(senderID);
-
-  if (args[0] === "stop") {
-    if (!isAdmin) return api.sendMessage("❌ শুধু Admin এই কমান্ড ইউজ করতে পারবে", threadID, messageID);
-    if (global.namazTimers) {
-      global.namazTimers.forEach(t => clearTimeout(t));
-      global.namazTimers = [];
-    }
-    return api.sendMessage(`╔═══════════════════╗
-║ ⚠️ সিস্টেম বন্ধ ║
-╚═══════════════════╝
-
-নামাজের রিমাইন্ডার বন্ধ করা হয়েছে।
-চালু করতে টাইপ করুন: ${prefix}namaz start`, threadID, messageID);
-  }
-
-  if (args[0] === "start") {
-    if (!isAdmin) return api.sendMessage("❌ শুধু Admin এই কমান্ড ইউজ করতে পারবে", threadID, messageID);
-    schedulePrayers(api);
-    return api.sendMessage(`╔═══════════════════╗
-║ ✅ সিস্টেম চালু ║
-╚═══════════════════╝
-
-নামাজের রিমাইন্ডার চালু করা হয়েছে।
-প্রতি ওয়াক্তে অটো মেসেজ পাবেন।`, threadID, messageID);
-  }
-
-  const now = moment.tz("Asia/Dhaka");
-  const date = toBanglaNum(now.format("DD")) + " " + BN_MONTHS[now.month()] + " " + toBanglaNum(now.format("YYYY"));
-  const day = BN_DAYS[now.day()];
-
-  let list = `╔═══════════════════╗
-║ 🕌 নামাজের সময়সূচী 🕌 ║
-╚═══════════════════╝
-
-📍 স্থান: বাংলাদেশ
-📅 তারিখ: ${date}
-📆 বার: ${day}
-━━━━━━━━━━━━━━━━━━━
-
-`;
-
-  for (const prayer of PRAYER_TIMES) {
-    list += `${prayer.emoji} ${prayer.name.padEnd(8, ' ')}: ${convertTo12Hour(prayer.time)}\n └─ ${prayer.desc}\n\n`;
-  }
-
-  list += `━━━━━━━━━━━━━━━━━━━
-✅ বট প্রতি ওয়াক্তে অটো রিমাইন্ডার পাঠাবে
-💡 বন্ধ করতে: ${prefix}namaz stop
-
-═══════════════════
-   🤲 আল্লাহ হাফেজ 🤲
-═══════════════════`;
-
-  return api.sendMessage(list, threadID, messageID);
-};
+  console.log("[NAMAZ] All pra
