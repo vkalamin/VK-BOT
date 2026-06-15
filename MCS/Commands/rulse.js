@@ -1,3 +1,6 @@
+const request = require("request");
+const fs = require("fs-extra");
+
 module.exports.config = {
     name: "rules",
     version: "1.0.0",
@@ -13,7 +16,7 @@ module.exports.onStart = async function (api, event, args) {
     const { threadID, messageID } = event;
     const time = new Date().toLocaleString("bn-BD", { timeZone: "Asia/Dhaka" });
 
-    const rulesMessage = 
+    const rulesMessage =
         `┏━━━━━━━━━━━━━━━━━━━━┓\n` +
         ` 📜 𝐓𝐎𝐍𝐍𝐈 𝐁𝐎𝐓 ব্যবহারের নিয়মাবলী📜\n` +
         `┗━━━━━━━━━━━━━━━━━━━━┛\n\n` +
@@ -31,12 +34,21 @@ module.exports.onStart = async function (api, event, args) {
         `⏰ 𝐓𝐈𝐌𝐄: ${time}\n\n` +
         `© 𝐓𝐇𝐀𝐍𝐊 𝐘𝐎𝐔 𝐅𝐎𝐑 𝐔𝐒𝐈𝐍𝐆 𝐓𝐎𝐍𝐍𝐈 𝐁𝐎𝐓🌺.`;
 
-    const imageUrl = "https://drive.google.com/uc?export=download&id=1Hvpc_64T7bEp2V_lyVdqylsUd2VBZHnC";
-‎        const cachePath = path.join(__dirname, "../../cache", "rules_image.jpg");
+    const imgPath = __dirname + "/cache/rules.jpg";
 
-    try {
-        return api.sendMessage(rulesMessage, threadID, messageID);
-    } catch (error) {
-        return api.sendMessage(`[ CMD ERROR ]: নিয়মাবলী লোড করতে সমস্যা হয়েছে।`, threadID, messageID);
-    }
+    request(
+        encodeURI("https://drive.google.com/uc?export=download&id=1Hvpc_64T7bEp2V_lyVdqylsUd2VBZHnC")
+    )
+    .pipe(fs.createWriteStream(imgPath))
+    .on("close", () => {
+        api.sendMessage(
+            {
+                body: rulesMessage,
+                attachment: fs.createReadStream(imgPath)
+            },
+            threadID,
+            () => fs.unlinkSync(imgPath),
+            messageID
+        );
+    });
 };
