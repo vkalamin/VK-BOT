@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=35&pause=1000&color=FF006E&center=true&vCenter=true&width=600&lines=%F0%9F%8E%BB%E2%8C%9A%EF%B8%8F%E2%83%A3%F0%9F%A7%A4%E2%80%8D++%F0%9D%92%AC%F0%9F%91%BD%F0%9D%93%87%F0%9D%92%AA%F0%9D%93%81-%F0%9D%91%A9%F0%9D%91%B6%F0%9D%91%A1++%F0%9F%A7%A4%E2%80%8D%E2%83%A3%E2%8C%9A%EF%B8%8F%F0%9F%8E%BB;VERSION+5.0.0-VIP;DEVELOPED+BY+MOHAMMAD+BADOL;POWERFUL+MESSENGER+BOT" alt="Typing SVG" />
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=35&pause=1000&color=FF006E&center=true&vCenter=true&width=600&lines=%F0%9F%8E%BB%E2%8C%9A%EF%B8%8F%E2%83%A3%F0%9F%A7%A4%E2%80%8D++%F0%9D%92%AC%F0%9F%91%BD%F0%9D%93%87%F0%9D%92%AA%F0%9D%93%81-%F0%9D%91%A9%F0%9D%91%B6%F0%9D%91%A1++%F0%9F%A7%A4%E2%80%8D%E2%83%A3%E2%8C%9A%EF%B8%8F%F0%9F%8E%BB;VERSION+5.0.0-VIP;DEVELOPED+BY+SAEEM+SHEIKH;POWERFUL+MESSENGER+BOT" alt="Typing SVG" />
 </p>
 
 <p align="center">
@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <img src="https://lh3.googleusercontent.com/d/1lf3TVYxwMsDZqByetetgtPf3mlBFcWMB" width="100%" style="border-radius: 15px;" alt="BADOL BOT V5 Image">
+  <img src="https://lh3.googleusercontent.com/d/1lf3TVYxwMsDZqByetetgtPf3mlBFcWMB" width="100%" style="border-radius: 15px;" alt="SAEEM BOT V5 Image">
 </p>
 
 <p align="center">
