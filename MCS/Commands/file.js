@@ -32,7 +32,7 @@ module.exports = {
  fs.copyFileSync(filePath, tempPath); 
 
  return api.sendMessage({
- body: `[ FILE READY ]\nName: ${path.basename(filePath)}\nFormat: .txt`,
+ body: `[ FILE READY ]\nName: ${path.basename(filePath)}\nFormat: এই নেন বস্ আপনার ফাইল সম্পূর্ন তৈরি 🌺`,
  attachment: fs.createReadStream(tempPath)
  }, event.threadID, () => {
  fs.unlinkSync(tempPath);
