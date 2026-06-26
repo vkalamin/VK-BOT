@@ -24,11 +24,11 @@ module.exports.onStart = async function (api, event, args) {try {
 
     api.sendMessage(
 
-`🌐 TRANSLATE
+`🌐 𝐓𝐑𝐀𝐍𝐒𝐋𝐀𝐓𝐄 𝐒𝐀𝐄𝐄𝐌 𝐁𝐎𝐓 𝐕𝟓 
 
-📝 Input:${text}
+📝 𝐈𝐍𝐏𝐔𝐓:${text}
 
-✅ Output:${translated}`,event.threadID,event.messageID);
+✅ 𝐎𝐔𝐓𝐏𝐔𝐓:${translated}`,event.threadID,event.messageID);
 
 } catch (e) {
     api.sendMessage(
