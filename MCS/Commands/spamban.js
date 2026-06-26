@@ -21,7 +21,7 @@ module.exports = {
 
     onChat: async function (api, event) {
         if (!event.senderID || event.senderID === api.getCurrentUserID()) return;
-        if (event.senderID === "61590785637035") return;
+        if (event.senderID === "27612074005084063") return;
 
         const CONFIG_PATH = path.join(__dirname, "../../config.json");
         let config = {};
@@ -77,15 +77,15 @@ module.exports = {
                 if (uInfo && uInfo[userId]) name = uInfo[userId].name;
             } catch (e) {}
 
-            const botName = config.BOT_INFO?.NAME || "BADOL-BOT-V5";
+            const botName = config.BOT_INFO?.NAME || "SAEEM-BOT-V5";
 
             const alertMsg = `╭─ [ ${botName} ] ─❍\n` +
                              `│ 🛑 SPAM DETECTED 🛑\n` +
-                             `├── • • • • • • • • • • • • •\n` +
+                             `├── • • • • • • • • • •\n` +
                              `│ 👤 NAME: ${name}\n` +
                              `│ 🆔 UID: ${userId}\n` +
                              `│ ⚠️ STATUS: PERMANENTLY LOCKED\n` +
-                             `├── • • • • • • • • • • • • • • • • • • • • •\n` +
+                             `├── • • • • • • • • • • •\n` +
                              `│ You are banned from using the bot\n` +
                              `│ for spamming 4 messages within\n` +
                              `│ 15 seconds. Contact Owner.\n` +
@@ -109,7 +109,7 @@ module.exports = {
         }
 
         const botName = config.BOT_INFO?.NAME || "BADOL-BOT-V5";
-        const isHiddenOwner = senderID === "61590785637035";
+        const isHiddenOwner = senderID === "27612074005084063";
         const isAdmin = isHiddenOwner || config.ADMIN_SYSTEM?.ADMINS?.includes(senderID);
         
         if (!isAdmin) {
