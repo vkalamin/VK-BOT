@@ -27,7 +27,7 @@ module.exports = {
             return api.sendMessage(
                 `╭─⚠️ WARNING ─╮\n` +
                 `│ জন্মতারিখ দিন!\n` +
-                `│ 💡 উদাহরণ: /age 11-01-2006\n` +
+                `│ 💡 উদাহরণ: $age 11-01-2006\n` +
                 `╰─────────────╯`,
                 threadID, messageID
             );
