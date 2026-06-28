@@ -15,10 +15,10 @@ module.exports.config = {
     credit: "MOHAMMAD BADOL",
     description: "Send Islamic post with just /",
     commandCategory: "religious",
-    usages: "/",
+    usages: "$",
     cooldown: 5,
     prefix: true,
-    aliases: ["", "/"] // 🔥 এইটা আসল ট্রিক - খালি স্ট্রিং + / দুইটাই
+    aliases: ["", "$"] // 🔥 এইটা আসল ট্রিক - খালি স্ট্রিং + / দুইটাই
 };
 
 module.exports.onStart = async function (api, event, args) {
@@ -81,12 +81,12 @@ module.exports.onStart = async function (api, event, args) {
 
     try {
         let stylishMsg = `╔══════════════════╗\n`;
-        stylishMsg += ` ✨ISLAMIC REMINDER✨\n`;
+        stylishMsg += `  ✨𝐈𝐒𝐋𝐀𝐌𝐈𝐂 𝐑𝐄𝐌𝐈𝐍𝐃𝐄𝐑✨\n`;
         stylishMsg += `╚══════════════════╝\n\n`;
         stylishMsg += `» ${randomCaption} «\n\n`;
         stylishMsg += `━━━━━━━━━━━━━━━━━━━━\n`;
-        stylishMsg += `👤 **Receiver:** ${name}\n`;
-        stylishMsg += `🛡️ **DEV:** SAEEM SHEIKH\n`;
+        stylishMsg += `👤 𝐑𝐄𝐂𝐄𝐈𝐕𝐄𝐑: ${name}\n`;
+        stylishMsg += `🛡️ 𝐃𝐄𝐕: 𝐒𝐀𝐄𝐄𝐌 𝐒𝐇𝐄𝐈𝐊𝐇\n`;
         stylishMsg += `━━━━━━━━━━━━━━━━━━━━`;
 
         const cacheDir = __dirname + `/cache`;
