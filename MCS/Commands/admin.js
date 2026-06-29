@@ -52,33 +52,23 @@ module.exports.onStart = async function(api, event, args) {
 
 	if (action === "list") {
 
-		let msg = `╭━━━━━━━━━━━━━━━━━━━━━━╮
-┃      👑 𝐁𝐎𝐓 𝐀𝐃𝐌𝐈𝐍 𝐋𝐈𝐒𝐓     ┃
-╰━━━━━━━━━━━━━━━━━━━━━━╯
+		let msg = "╭━━〔 👑 BOT ADMIN LIST 〕━━╮\n\n";
 
-`;
+		for (let i = 0; i < db.admins.length; i++) {
 
-for (let i = 0; i < db.admins.length; i++) {
-	let name = "Unknown";
-	try {
-		const info = await api.getUserInfo(db.admins[i]);
-		name = info[db.admins[i]].name;
-	} catch {}
+			let name = "Unknown";
 
-	msg += `╭─〔 ${i + 1} 〕─────────────
-👤 𝐍𝐀𝐌𝐄 : ${name}
-🆔 𝐔𝐈𝐃 : ${db.admins[i]}
-╰──────────────────
+			try {
+				const info = await api.getUserInfo(db.admins[i]);
+				name = info[db.admins[i]].name;
+			} catch {}
 
-`;
-}
+			msg += `${i + 1}. ${name}\n🆔 ${db.admins[i]}\n\n`;
+		}
 
-msg += `━━━━━━━━━━━━━━━━━━━━━━
-🤖 𝐁𝐎𝐓 : 𝐒𝐀𝐄𝐄𝐌-𝐁𝐎𝐓-𝐕𝟓
-👑 𝐃𝐄𝐕𝐄𝐋𝐎𝐏𝐄𝐑 : 𝐒𝐀𝐄𝐄𝐌 𝐒𝐇𝐄𝐈𝐊𝐇
-━━━━━━━━━━━━━━━━━━━━━━`;
+		msg += "╰━━━━━━━━━━━━━━━━━━╯";
 
-return api.sendMessage(msg, threadID, messageID);
+		return api.sendMessage(msg, threadID, messageID);
 	}
 
 	if (!isAdmin) {
@@ -93,27 +83,21 @@ return api.sendMessage(msg, threadID, messageID);
 	if (!action) {
 
 		return api.sendMessage(
-`╭━━━━━━━━━━━━━━━━━━━━━━╮
-┃      ⚙️ 𝐀𝐃𝐌𝐈𝐍 𝐏𝐀𝐍𝐄𝐋      ┃
-╰━━━━━━━━━━━━━━━━━━━━━━╯
+`╭━━〔 ADMIN PANEL 〕━━╮
 
-📜 𝐀𝐯𝐚𝐢𝐥𝐚𝐛𝐥𝐞 𝐂𝐨𝐦𝐦𝐚𝐧𝐝𝐬
+$admin list
+$admin add @user
+$admin remove @user
 
-➤ $admin list
-➤ $admin add @user
-➤ $admin remove @user
+Reply + $admin add
+Reply + $admin remove
 
-💬 𝐘𝐨𝐮 𝐂𝐚𝐧 𝐀𝐥𝐬𝐨 𝐑𝐞𝐩𝐥𝐲:
+╰━━━━━━━━━━━━━━╯`,
+			threadID,
+			messageID
+		);
+	}
 
-➤ Reply + $admin add
-➤ Reply + $admin remove
-
-━━━━━━━━━━━━━━━━━━━━━━
-  𝄞⋆⃝🧚𝐒𝐀𝐄𝐄𝐌-𝐁𝐎𝐓-𝐕𝟓🧚‍⋆⃝𝄞
-━━━━━━━━━━━━━━━━━━━━━━`,
-threadID,
-messageID
-);
 	if (!target) {
 
 		return api.sendMessage(
@@ -127,19 +111,10 @@ messageID
 
 		if (db.admins.includes(target))
 			return api.sendMessage(
-`╭━━━━━━━━━━━━━━━━━━━━━━╮
-┃        ⚠️ 𝐖𝐀𝐑𝐍𝐈𝐍𝐆        ┃
-╰━━━━━━━━━━━━━━━━━━━━━━╯
-
-👤 ${name}
-
-✅ 𝐓𝐇𝐈𝐒 𝐔𝐒𝐄𝐑 𝐈𝐒 𝐀𝐋𝐑𝐄𝐀𝐃𝐘 𝐀 
-𝐁𝐎𝐓 𝐀𝐃𝐌𝐈𝐍.
-
-━━━━━━━━━━━━━━━━━━━━━━`,
-threadID,
-messageID
-);
+				"⚠️ Already Admin.",
+				threadID,
+				messageID
+			);
 
 		db.admins.push(target);
 		saveAdmin(db);
@@ -152,39 +127,23 @@ messageID
 		} catch {}
 
 		return api.sendMessage(
-`╭━━━━━━━━━━━━━━━━━━━━━━╮
-┃ ✅ 𝐀𝐃𝐌𝐈𝐍 𝐀𝐃𝐃𝐄𝐃 𝐒𝐔𝐂𝐂𝐄𝐒𝐒  ┃
-╰━━━━━━━━━━━━━━━━━━━━━━╯
+`✅ Admin Added Successfully
 
-👤 𝐍𝐀𝐌𝐄 : ${name}
-🆔 𝐔𝐈𝐃 : ${target}
-
-🎉 𝐒𝐓𝐀𝐓𝐔𝐒 : Bot Admin
-⚡ 𝐏𝐄𝐑𝐌𝐈𝐒𝐒𝐈𝐎𝐍 𝐆𝐑𝐀𝐍𝐓𝐄𝐃
-
-━━━━━━━━━━━━━━━━━━━━━━
-  𝄞⋆⃝🧚𝐒𝐀𝐄𝐄𝐌-𝐁𝐎𝐓-𝐕𝟓🧚‍⋆⃝𝄞
-━━━━━━━━━━━━━━━━━━━━━━`,
-threadID,
-messageID
-);
+👤 ${name}
+🆔 ${target}`,
+			threadID,
+			messageID
+		);
 	}
 
 	if (action === "remove") {
 
 		if (!db.admins.includes(target))
 			return api.sendMessage(
-`╭━━━━━━━━━━━━━━━━━━━━━━╮
-┃        ⚠️ 𝐖𝐀𝐑𝐍𝐈𝐍𝐆        ┃
-╰━━━━━━━━━━━━━━━━━━━━━━╯
-
-❌ 𝐓𝐇𝐈𝐒 𝐔𝐒𝐄𝐑 𝐈𝐒 𝐍𝐎𝐓 𝐀 
-𝐁𝐎𝐓 𝐀𝐃𝐌𝐈𝐍.
-
-━━━━━━━━━━━━━━━━━━━━━━`,
-threadID,
-messageID
-);
+				"⚠️ User isn't admin.",
+				threadID,
+				messageID
+			);
 
 		db.admins = db.admins.filter(id => id != target);
 		saveAdmin(db);
@@ -197,22 +156,13 @@ messageID
 		} catch {}
 
 		return api.sendMessage(
-`╭━━━━━━━━━━━━━━━━━━━━━━╮
-┃❌ 𝐀𝐃𝐌𝐈𝐍 𝐑𝐄𝐌𝐎𝐕𝐄𝐃 𝐒𝐔𝐂𝐂𝐄𝐒𝐒┃
-╰━━━━━━━━━━━━━━━━━━━━━━╯
+`✅ Admin Removed
 
-👤 𝐍𝐀𝐌𝐄 : ${name}
-🆔 𝐔𝐈𝐃 : ${target}
-
-🚫 𝐒𝐓𝐀𝐓𝐔𝐒 : Removed
-🔒 𝐏𝐄𝐑𝐌𝐈𝐒𝐒𝐈𝐎𝐍 𝐑𝐄𝐕𝐎𝐊𝐄𝐃
-
-━━━━━━━━━━━━━━━━━━━━━━
-  𝄞⋆⃝🧚𝐒𝐀𝐄𝐄𝐌-𝐁𝐎𝐓-𝐕𝟓🧚‍⋆⃝𝄞
-━━━━━━━━━━━━━━━━━━━━━━`,
-threadID,
-messageID
-);
+👤 ${name}
+🆔 ${target}`,
+			threadID,
+			messageID
+		);
 	}
 
 	return api.sendMessage(
