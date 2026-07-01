@@ -55,14 +55,8 @@ https://www.facebook.com/share/18bJMPizgD/
 💬 𝗠𝗔𝗦𝗦𝗔𝗚𝗘𝗥 :
 https://m.me/saeem.sheikh2.0
 
-🤖 𝗕𝗢𝗧 𝗡𝗔𝗠𝗘 :
-𝗦𝗔𝗘𝗘𝗠-𝗕𝗢𝗧-𝗩𝟱
-
-👑 𝗢𝗪𝗡𝗘𝗥 :
-𝗦𝗔𝗘𝗘𝗠 𝗦𝗛𝗘𝗜𝗞𝗛
-
 ━━━━━━━━━━━━━━━━━━━━
-💙 𝗧𝗛𝗔𝗡𝗞𝗦 𝗙𝗢𝗥 𝗨𝗦𝗜𝗡𝗚
+💙 𝗧𝗛𝗔𝗡𝗞𝗦 𝗙𝗢𝗥 𝗨𝗦𝗜𝗡𝗚 
 𝗦𝗔𝗘𝗘𝗠-𝗕𝗢𝗧-𝗩𝟱`,
                 attachment: fs.createReadStream(imgPath)
             },
