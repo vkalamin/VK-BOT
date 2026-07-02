@@ -45,7 +45,7 @@ module.exports = {
         const memberCount = threadInfo.participantIDs.length;
         const prefix = config.BOT_INFO?.PREFIX || "$";
         const botName = config.BOT_INFO?.NAME || "SAEEM-BOT-V5";
-        const owner = config.OWNER_LOCK?.NAME || "SAEEM SHEIKH";
+        const owner = "SAEEM SHEIKH";
 
         // অ্যাডমিন নাম
         let adderName = "Admin";
@@ -87,7 +87,7 @@ module.exports = {
 ${prefix}help
 
 ━━━━━━━━━━━━━━━━━━━━━
-👑 𝗢𝗪𝗡𝗘𝗥: ${owner}
+👑 𝗢𝗪𝗡𝗘𝗥: SAEEM SHEIKH 
 
 সবাইকে স্বাগতম! 🌸
 ╰─────────────────────╯`;
