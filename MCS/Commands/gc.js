@@ -44,12 +44,12 @@ module.exports.onStart = async function (api, event, args) {
                         nickName = args.slice(1).join(" ").replace(mentionName, "").trim();
                     }
 
-                    if (!nickName) return api.sendMessage("📝 Usage: /gc name [@tag] [nickname]\nঅথবা: /gc name [Group Name]", threadID, messageID);
+                    if (!nickName) return api.sendMessage("📝 Usage: $gc name [@tag] [nickname]\nঅথবা: $gc name [Group Name]", threadID, messageID);
                     await api.changeNickname(nickName, threadID, targetID);
                     return api.sendMessage(`✅ 𝐒𝐔𝐂𝐂𝐄𝐒𝐒: Nickname আপডেট করা হয়েছে।`, threadID, messageID);
                 } else {
                     const newGroupName = args.slice(1).join(" ");
-                    if (!newGroupName) return api.sendMessage("📝 Usage: /gc name [Group Name]", threadID, messageID);
+                    if (!newGroupName) return api.sendMessage("📝 Usage: $gc name [Group Name]", threadID, messageID);
                     await api.setTitle(newGroupName, threadID);
                     return api.sendMessage(`✅ 𝐒𝐔𝐂𝐂𝐄𝐒𝐒: গ্রুপের নাম চেঞ্জ করা হয়েছে: ${newGroupName}`, threadID, messageID);
                 }
@@ -87,14 +87,14 @@ module.exports.onStart = async function (api, event, args) {
 
             case "emoji": {
                 const newEmoji = args[1];
-                if (!newEmoji) return api.sendMessage("📝 Usage: /gc emoji [emoji]", threadID, messageID);
+                if (!newEmoji) return api.sendMessage("📝 Usage: $gc emoji [emoji]", threadID, messageID);
                 await api.changeThreadEmoji(newEmoji, threadID);
                 return api.sendMessage(`✅ 𝐒𝐔𝐂𝐂𝐄𝐒𝐒: গ্রুপ ইমোজি চেঞ্জ করা হয়েছে ${newEmoji}`, threadID, messageID);
             }
 
             case "pp": {
                 if (type!== "message_reply" ||!messageReply.attachments || messageReply.attachments.length == 0) {
-                    return api.sendMessage("🖼️ একটা ছবিতে reply দিয়ে '/gc pp' লিখো", threadID, messageID);
+                    return api.sendMessage("🖼️ একটা ছবিতে reply দিয়ে '$gc pp' লিখো", threadID, messageID);
                 }
                 const imgURL = messageReply.attachments[0].url;
                 const imgRes = await axios.get(imgURL, { responseType: "stream" });
@@ -120,13 +120,13 @@ module.exports.onStart = async function (api, event, args) {
                 let helpMsg = `╭─────────────╮\n`;
                 helpMsg += ` ⚙️ 𝐆𝐂 𝐒𝐄𝐓𝐓𝐈𝐍𝐆𝐒\n`;
                 helpMsg += `╰─────────────╯\n\n`;
-                helpMsg += `❐ /gc info - গ্রুপের তথ্য\n`;
-                helpMsg += `❐ /gc name - নাম/নিকনেম চেঞ্জ\n`;
-                helpMsg += `❐ /gc emoji - ইমোজি চেঞ্জ\n`;
-                helpMsg += `❐ /gc pp - গ্রুপ ছবি চেঞ্জ\n`;
-                helpMsg += `❐ /gc admin - Admin বানাও\n`;
-                helpMsg += `❐ /gc remove - Admin সরাও\n\n`;
-                helpMsg += `💡 Usage: /gc [option]`;
+                helpMsg += `❐ $gc info - গ্রুপের তথ্য\n`;
+                helpMsg += `❐ $gc name - নাম/নিকনেম চেঞ্জ\n`;
+                helpMsg += `❐ $gc emoji - ইমোজি চেঞ্জ\n`;
+                helpMsg += `❐ $gc pp - গ্রুপ ছবি চেঞ্জ\n`;
+                helpMsg += `❐ $gc admin - Admin বানাও\n`;
+                helpMsg += `❐ $gc remove - Admin সরাও\n\n`;
+                helpMsg += `💡 Usage: $gc [option]`;
                 return api.sendMessage(helpMsg, threadID, messageID);
             }
         }
