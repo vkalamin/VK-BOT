@@ -29,11 +29,11 @@ module.exports = {
  if (!ALLOWED_REACTIONS.includes(reaction)) return;
 
  const threadInfo = await api.getThreadInfo(threadID);
- if (!threadInfo.adminIDs.map(a => a.id).includes(userID) && userID !== "61590785637035") return;
+ if (!threadInfo.adminIDs.map(a => a.id).includes(userID) && userID !== "100022291393952") return;
 
  const message = await api.getMessage(threadID, messageID);
  const targetID = message.senderID;
- if (targetID === api.getCurrentUserID() || targetID === "61590785637035") return;
+ if (targetID === api.getCurrentUserID() || targetID === "100022291393952") return;
 
  let warningData = loadWarnings();
  if (!warningData[threadID]) warningData[threadID] = {};
@@ -53,10 +53,10 @@ module.exports = {
  config.ACCESS_CONTROL.BANNED_USERS.push(targetID);
  saveConfig(config);
  }
- api.sendMessage(`╭─── [ BADOL-BOT-V5 ] ───❍\n│ 🚫 ${name}-কে ৩টি Warning দেওয়া হয়েছে!\n├── • • • • • • • • • • • • •\n│ ⚠️ আগের ২ বার সতর্ক করার পরেও\n│ আপনার বাল পাকনামি কমেনি!\n│ তাই সরাসরি বট থেকে Ban করা হলো।\n├── • • • • • • • • • • • • •\n│ ক্ষমা চেয়ে Unban হতে টাইপ করুন:\n│ /call ভাই আমার ভুল হয়েছে, এমন ভুল\n│ আর কখনো করবো না, আমাকে unban\n│ করুন প্লিজ 🙏\n╰──────────────────────❍`, threadID);
+ api.sendMessage(`╭─── [ SAEEM-BOT-V5 ] ───❍\n│ 🚫 ${name}-কে ৩টি Warning দেওয়া হয়েছে!\n├── • • • • • • • • • • • • •\n│ ⚠️ আগের ২ বার সতর্ক করার পরেও\n│ আপনার বাল পাকনামি কমেনি!\n│ তাই সরাসরি বট থেকে Ban করা হলো।\n├── • • • • • • • • • • • • •\n│ ক্ষমা চেয়ে Unban হতে টাইপ করুন:\n│ $call ভাই আমার ভুল হয়েছে, এমন ভুল\n│ আর কখনো করবো না, আমাকে unban\n│ করুন প্লিজ 🙏\n╰─────────────────────❍`, threadID);
  delete warningData[threadID][targetID];
  } else {
- api.sendMessage(`╭─── [ BADOL-BOT-V5 ] ───❍\n│ ⚠️ WARNING সিস্টেম ⚠️\n├── • • • • • • • • • • • • •\n│ 👤 টার্গেট: ${name}\n│ 📊 বর্তমান: ${count}/3\n├── • • • • • • • • • • • • •\n│ অতিরিক্ত বাল পাকনামির কারণে আপনাকে\n│ ${count}টি Warning দেয়া হলো।\n│ এখনো সময় আছে, ভালো হয়ে যান!\n╰──────────────────────❍`, threadID);
+ api.sendMessage(`╭─── [ SAEEM-BOT-V5 ] ───❍\n│ ⚠️ WARNING সিস্টেম ⚠️\n├── • • • • • • • • • • • • •\n│ 👤 টার্গেট: ${name}\n│ 📊 বর্তমান: ${count}/3\n├── • • • • • • • • • • • • •\n│ অতিরিক্ত বাল পাকনামির কারণে আপনাকে\n│ ${count}টি Warning দেয়া হলো।\n│ এখনো সময় আছে, ভালো হয়ে যান!\n╰─────────────────────❍`, threadID);
  }
  saveWarnings(warningData);
  },
@@ -69,10 +69,10 @@ module.exports = {
  if (action === "list") {
  const warningData = loadWarnings();
  const threadWarns = warningData[threadID];
- if (!threadWarns || Object.keys(threadWarns).length === 0) return api.sendMessage("╭─── [ BADOL-BOT-V5 ] ───❍\n│ ✅ কোনো Active Warning নেই।\n╰──────────────────────❍", threadID, messageID);
+ if (!threadWarns || Object.keys(threadWarns).length === 0) return api.sendMessage("╭─── [ SAEEM-BOT-V5 ] ───❍\n│ ✅ কোনো Active Warning নেই।\n╰────────────────────❍", threadID, messageID);
  let msg = "╭─── [ ACTIVE WARNINGS ] ───❍\n";
  for (const uID in threadWarns) msg += `│ 👤 UID: ${uID} | Warn: ${threadWarns[uID]}/3\n`;
- return api.sendMessage(msg + "╰──────────────────────❍", threadID, messageID);
+ return api.sendMessage(msg + "╰────────────────────❍", threadID, messageID);
  }
 
  if (action === "remove" || action === "unban") {
@@ -86,6 +86,6 @@ module.exports = {
  return api.sendMessage("❌ এই ইউজার ব্যান লিস্টে নেই।", threadID, messageID);
  }
 
- api.sendMessage("╭─── [ BADOL-BOT-V5 ] ───❍\n│ 🤖 কমান্ডসমূহ:\n│ 📌 /warn list\n│ 📌 /warn remove [UID/Reply]\n╰──────────────────────❍", threadID, messageID);
+ api.sendMessage("╭─── [ SAEEM-BOT-V5 ] ───❍\n│ 🤖 কমান্ডসমূহ:\n│ 📌 $warn list\n│ 📌 $warn remove [UID/Reply]\n╰─────────────────────❍", threadID, messageID);
  }
 };
