@@ -4,7 +4,7 @@
   
 <!-- Typing Animation -->
 <p align="center">
-  <img src="https://readme-typing-svg.herokuapp.com?font=JetBrains+Mono&size=22&duration=3000&pause=1000&color=00A8FF&center=true&vCenter=true&width=500&lines=Assalamualaikum+Everyone!;WELCOME+TO+SAEEM+BOT+V5+Fork!" />
+  <img src="https://readme-typing-svg.herokuapp.com?font=JetBrains+Mono&size=22&duration=3000&pause=1000&color=00A8FF&center=true&vCenter=true&width=500&lines=ASSALAMUALAIKUM+EVERYONE!;WELCOME+TO+SAEEM+BOT+V5+FORK!" />
 </p>
 
 <!-- Image -->
