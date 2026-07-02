@@ -56,7 +56,7 @@ module.exports = {
  // একজন মেম্বার কিক
  if (Object.keys(mentions).length === 0) {
  return api.sendMessage(
- "❌ যাকে কিক করবা তাকে মেনশন দাও।\n\nExample:\n.kick @user\n.kick all",
+ "❌ যাকে কিক করবা তাকে মেনশন দাও।\n\nExample:\n$kick @user\n$kick all",
  threadID,
  messageID
  );
