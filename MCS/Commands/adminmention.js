@@ -1,3 +1,7 @@
+const axios = require("axios");
+const fs = require("fs-extra");
+const path = require("path");
+
 module.exports.config = {
   name: "adminmention",
   version: "3.0.0",
@@ -9,41 +13,39 @@ module.exports.config = {
   cooldown: 5
 };
 
-// 🔥 এখানে তোমার Admin ID গুলা বসাও
+// 👑 এখানে Admin UID বসান
 const adminIDs = [
-  "100022291393952",
-  ""
+  "100022291393952"
 ];
 
+// 🖼️ এখানে আপনার ছবির Direct Link বসান
+const IMAGE_URL = "https://drive.google.com/uc?export=download&id=1G3Wn_gDX-tljSSuOrtn5nyTtcneDMf0k";
+
 module.exports.onChat = async function (api, event) {
-  const { threadID, messageID, senderID, mentions } = event;
-  
-  // বট নিজে মেসেজ দিলে ইগনোর
-  if (senderID == api.getCurrentUserID()) return;
-  
-  // মেনশন না থাকলে ইগনোর
-  if (!mentions || Object.keys(mentions).length === 0) return;
+  try {
+    const { threadID, messageID, senderID, mentions } = event;
 
-  // Admin মেনশন চেক করো
-  const mentionedAdmin = Object.keys(mentions).find(id => adminIDs.includes(id));
-  if (!mentionedAdmin) return;
+    if (senderID == api.getCurrentUserID()) return;
+    if (!mentions || Object.keys(mentions).length === 0) return;
 
-  // একই মেসেজে বার বার রিপ্লাই আটকাও
-  if (global.adminMentioned === messageID) return;
-  global.adminMentioned = messageID;
+    const mentionedAdmin = Object.keys(mentions).find(id => adminIDs.includes(id));
+    if (!mentionedAdmin) return;
 
-  const funnyReplies = [
-`╭━━━〔 👑 OWNER NOTICE 〕━━━╮
+    if (global.adminMentioned === messageID) return;
+    global.adminMentioned = messageID;
+
+    const funnyReplies = [
+`╭━━〔 👑 OWNER NOTICE 〕━━╮
 ┃ 📵 বস এখন অফলাইনে আছেন।
 ┃ 📩 আপনার মেনশন পৌঁছে গেছে।
 ┃ ⏳ একটু ধৈর্য ধরুন।
-╰━━━━━━━━━━━━━━━━━━━━━━╯`,
+╰━━━━━━━━━━━━━━━━━━━━━╯`,
 
-`╭━━━〔 🤖 SAEEM-BOT-V5 〕━━━╮
+`╭━━〔 🤖 SAEEM-BOT-V5 〕━━╮
 ┃ 👑 বসকে বেশি মেনশন করবেন না।
 ┃ 😌 উনি নিজেই সব দেখছেন।
 ┃ ❤️ ধন্যবাদ।
-╰━━━━━━━━━━━━━━━━━━━━━━╯`,
+╰━━━━━━━━━━━━━━━━━━━━━╯`,
 
 `╭━━━〔 ⚡ SYSTEM 〕━━━╮
 ┃ 📡 Owner বর্তমানে ব্যস্ত।
@@ -61,7 +63,7 @@ module.exports.onChat = async function (api, event) {
 ┃ 🌸 Owner কে সম্মান করুন।
 ┃ 🚫 অযথা মেনশন করবেন না।
 ┃ 😊 ধন্যবাদ।
-╰━━━━━━━━━━━━━━━━━━━━━━╯`,
+╰━━━━━━━━━━━━━━━━━━━━╯`,
 
 `╭━━━〔 ⏳ WAIT 〕━━━╮
 ┃ 📬 আপনার মেনশন জমা হয়েছে।
@@ -75,7 +77,7 @@ module.exports.onChat = async function (api, event) {
 ┃ 😂 পরে আবার আসুন।
 ╰━━━━━━━━━━━━━━━━━━━━━━╯`,
 
-`╭━━━〔 ☕ BREAK TIME 〕━━━╮
+`╭━━〔 ☕ BREAK TIME 〕━━╮
 ┃ ☕ বস চা খেতে গেছেন।
 ┃ 📢 ফিরে এলেই জানানো হবে।
 ┃ 😁 অপেক্ষা করুন।
@@ -86,19 +88,122 @@ module.exports.onChat = async function (api, event) {
 ┃ 🏆 ম্যাচ শেষ হলে আসবেন।
 ┃ 😎 একটু অপেক্ষা করুন।
 ╰━━━━━━━━━━━━━━━━━━━━━━╯`,
-
+      
 `╭━━━〔 🌙 NIGHT MODE 〕━━━╮
 ┃ 😴 বস বিশ্রামে আছেন।
 ┃ 🌟 জরুরি হলে ইনবক্স করুন।
 ┃ ❤️ শুভকামনা।
 ╰━━━━━━━━━━━━━━━━━━━━━━╯`
-];
 
-  const randomMsg = funnyReplies[Math.floor(Math.random() * funnyReplies.length)];
-  
-  console.log(`[ADMINMENTION] Triggered by ${senderID} for admin ${mentionedAdmin}`);
-  
-  return api.sendMessage(randomMsg, threadID, messageID);
+`╭━━━〔 📢 OWNER ALERT 〕━━━╮
+┃ 👑 বসকে ডাকা হয়েছে।
+┃ 📩 নোটিফিকেশন পাঠানো হয়েছে।
+┃ ⏳ একটু অপেক্ষা করুন।
+╰━━━━━━━━━━━━━━━━━━━━━━╯`,
+
+`╭━━━〔 😆 FUNNY MODE 〕━━━╮
+┃ 😂 বসকে এত মেনশন কেন?
+┃ 🤭 একটু শান্ত হন ভাই।
+┃ ❤️ উনি দেখলেই উত্তর দিবেন।
+╰━━━━━━━━━━━━━━━━━━━━━━╯`,
+
+`╭━━━〔 🚀 SYSTEM NOTICE 〕━━━╮
+┃ 📡 আপনার মেনশন রেকর্ড হয়েছে।
+┃ 👑 Owner ব্যস্ত আছেন।
+┃ ⏳ ধৈর্য ধরুন।
+╰━━━━━━━━━━━━━━━━━━━━━━╯`,
+
+`╭━━━〔 💻 CODING MODE 〕━━━╮
+┃ 🔥 বস এখন কোড লিখছেন।
+┃ ⚠️ বিরক্ত করলে Error হতে পারে।
+┃ 😅 একটু পরে আসুন।
+╰━━━━━━━━━━━━━━━━━━━━━━╯`,
+
+`╭━━━〔 📬 MESSAGE SENT 〕━━━╮
+┃ 📨 আপনার মেসেজ পৌঁছে গেছে।
+┃ 👑 বস দেখলেই রিপ্লাই করবেন।
+┃ ❤️ ধন্যবাদ।
+╰━━━━━━━━━━━━━━━━━━━━━━╯`,
+
+`╭━━━〔 🤖 SAEEM BOT 〕━━━╮
+┃ 👑 Owner সবকিছু নজরে রাখছেন।
+┃ 😎 অযথা টেনশন নেবেন না।
+┃ 💙 সুন্দরভাবে অপেক্ষা করুন।
+╰━━━━━━━━━━━━━━━━━━━━━━╯`,
+
+`╭━━━〔 ⏰ WAIT PLEASE 〕━━━╮
+┃ 🕒 একটু সময় দিন।
+┃ 👑 বস শীঘ্রই অনলাইনে আসবেন।
+┃ 💖 ধন্যবাদ।
+╰━━━━━━━━━━━━━━━━━━━━━━╯`,
+
+`╭━━━〔 😜 LOL MODE 〕━━━╮
+┃ 🤣 এত জোরে ডাকবেন না!
+┃ 👑 বস পালিয়ে যাবেন কিন্তু!
+┃ 😂 একটু আস্তে ডাকুন।
+╰━━━━━━━━━━━━━━━━━━━━━━╯`,
+
+`╭━━━〔 🎯 OWNER STATUS 〕━━━╮
+┃ 🟢 Owner-এর কাছে নোটিফিকেশন গেছে।
+┃ 📩 উত্তর আসলেই জানতে পারবেন।
+┃ ❤️ অপেক্ষা করুন।
+╰━━━━━━━━━━━━━━━━━━━━━━╯`,
+
+`╭━━━〔 🌸 RESPECT OWNER 〕━━━╮
+┃ 🌹 Owner-কে সম্মান করুন।
+┃ 🚫 অপ্রয়োজনীয় মেনশন করবেন না।
+┃ 😊 সবাইকে ধন্যবাদ।
+╰━━━━━━━━━━━━━━━━━━━━━━╯`,
+
+`╭━━━〔 🔔 NOTIFICATION 〕━━━╮
+┃ 📢 বসকে পিং করা হয়েছে।
+┃ 📲 তিনি দেখলেই সাড়া দেবেন।
+┃ 💙 অপেক্ষা করুন।
+╰━━━━━━━━━━━━━━━━━━━━━━╯`,
+
+`╭━━━〔 🎉 HELLO USER 〕━━━╮
+┃ 😄 Owner-কে ডাকার জন্য ধন্যবাদ।
+┃ 👑 তিনি ব্যস্ত থাকলে একটু অপেক্ষা করুন।
+┃ ❤️ শুভেচ্ছা রইল।
+╰━━━━━━━━━━━━━━━━━━━━━━╯`,
+    ];
+
+    const randomMsg = funnyReplies[Math.floor(Math.random() * funnyReplies.length)];
+
+    const cacheDir = path.join(__dirname, "cache");
+    await fs.ensureDir(cacheDir);
+
+    const filePath = path.join(cacheDir, `adminmention_${Date.now()}.jpg`);
+
+    const response = await axios({
+      url: IMAGE_URL,
+      method: "GET",
+      responseType: "stream"
+    });
+
+    const writer = fs.createWriteStream(filePath);
+    response.data.pipe(writer);
+
+    writer.on("finish", () => {
+      api.sendMessage(
+        {
+          body: randomMsg,
+          attachment: fs.createReadStream(filePath)
+        },
+        threadID,
+        () => fs.remove(filePath),
+        messageID
+      );
+    });
+
+    writer.on("error", () => {
+      api.sendMessage(randomMsg, threadID, messageID);
+    });
+
+  } catch (err) {
+    console.log(err);
+    api.sendMessage("❌ Admin Mention System Error!", event.threadID, event.messageID);
+  }
 };
 
 module.exports.onStart = async function () {};
