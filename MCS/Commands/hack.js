@@ -16,7 +16,6 @@ module.exports.config = {
 
 module.exports.onStart = async function (api, event, args) {
   try {
-
     const {
       threadID,
       messageID,
@@ -37,35 +36,44 @@ module.exports.onStart = async function (api, event, args) {
     }
 
     // আপনার ছবির Direct Link
-    const IMAGE_URL = "https://drive.google.com/uc?export=download&id=1DxAIX1MGBjeJDhbjK0QbNeGxUiEn33yu";
+    const IMAGE_URL = "https://drive.google.com/uc?export=download&id=19fh32VLvSJ39Mu0rR2k8MHi-TTJqpC03";
+
+    // বোল্ড ফন্টে কনভার্ট করার ফাংশন (𝐀 𝐁 𝐂 𝐃...)
+    function toBold(text) {
+      const map = {
+        "a": "𝐚", "b": "𝐛", "c": "𝐜", "d": "𝐝", "e": "𝐞", "f": "𝐟", "g": "𝐠", "h": "𝐡", "i": "𝐢", "j": "𝐣", "k": "𝐤", "l": "𝐥", "m": "𝐦", "n": "𝐧", "o": "𝐨", "p": "𝐩", "q": "𝐪", "r": "𝐫", "s": "𝐬", "t": "𝐭", "u": "𝐮", "v": "𝐯", "w": "𝐰", "x": "𝐱", "y": "𝐲", "z": "𝐳",
+        "A": "𝐀", "B": "𝐁", "C": "𝐂", "D": "𝐃", "E": "𝐄", "F": "𝐅", "G": "𝐆", "H": "𝐇", "I": "𝐈", "J": "𝐉", "K": "𝐊", "L": "𝐋", "M": "𝐌", "N": "𝐍", "O": "𝐎", "P": "𝐏", "Q": "𝐐", "R": "𝐑", "S": "𝐒", "T": "𝐓", "U": "𝐔", "V": "𝐕", "W": "𝐖", "X": "𝐗", "Y": "𝐘", "Z": "𝐙",
+        "0": "𝟎", "1": "𝟏", "2": "𝟐", "3": "𝟑", "4": "𝟒", "5": "𝟓", "6": "𝟔", "7": "𝟕", "8": "𝟖", "9": "𝟗"
+      };
+      return String(text).split('').map(char => map[char] || char).join('');
+    }
 
     // Victim Information
-
     let victimName = "Unknown";
     let victimGender = "Unknown";
-    let profileLink = `https://facebook.com/${targetID}`;
+    let rawProfileLink = `https://facebook.com/${targetID}`; // এটি আসল লিংক হিসেবে থাকবে
 
     try {
-
       const userInfo = await api.getUserInfo(targetID);
 
       if (userInfo && userInfo[targetID]) {
-
         victimName = userInfo[targetID].name || "Unknown";
 
         if (userInfo[targetID].gender == 2)
-          victimGender = "Male";
+          victimGender = "𝐌𝐚𝐥𝐞";
         else if (userInfo[targetID].gender == 1)
-          victimGender = "Female";
-
+          victimGender = "𝐅𝐞𝐦𝐚𝐥𝐞";
       }
-
     } catch (e) {
       console.log(e);
     }
 
+    // ফন্ট স্টাইল অ্যাপ্লাই করা
+    const styledName = toBold(victimName);
+    const styledUID = toBold(targetID);
+
     const steps = [
-      "📡 Initializing SAEEM Cyber Engine...",
+      "📡 Initializing saeem Cyber Engine...",
       "🌐 Connecting Secure Server...",
       "👤 Detecting Target...",
       "📲 Reading Facebook Profile...",
@@ -82,26 +90,18 @@ module.exports.onStart = async function (api, event, args) {
     let loadingMessage;
 
     api.sendMessage(steps[0], threadID, async (err, info) => {
-
       if (err) return;
 
       loadingMessage = info;
 
       for (let i = 1; i < steps.length; i++) {
-
         await new Promise(resolve => setTimeout(resolve, 1500));
-
         try {
-
           await api.editMessage(
-            `${steps[i]}
-
-██████████ ${Math.floor(((i + 1) / steps.length) * 100)}%`,
+            `${steps[i]}\n\n██████████ ${Math.floor(((i + 1) / steps.length) * 100)}%`,
             loadingMessage.messageID
           );
-
         } catch (e) {}
-
       }
 
       await new Promise(resolve => setTimeout(resolve, 1200));
@@ -115,7 +115,6 @@ module.exports.onStart = async function (api, event, args) {
       );
 
       try {
-
         const response = await axios({
           url: IMAGE_URL,
           method: "GET",
@@ -123,11 +122,9 @@ module.exports.onStart = async function (api, event, args) {
         });
 
         const writer = fs.createWriteStream(imagePath);
-
         response.data.pipe(writer);
 
         writer.on("finish", async () => {
-
           try {
             await api.unsendMessage(loadingMessage.messageID);
           } catch (e) {}
@@ -136,11 +133,11 @@ module.exports.onStart = async function (api, event, args) {
 💀 𝐒𝐀𝐄𝐄𝐌 𝐂𝐘𝐁𝐄𝐑 𝐄𝐍𝐆𝐈𝐍𝐄 💀
 ━━━━━━━━━━━━━━━━━━━━━
 
-👤 ‎𝐍𝐚𝐦𝐞 : ${victimName}
-🆔 𝐔𝐈𝐃 : ${targetID}
+👤 𝐍𝐚𝐦𝐞 : ${styledName}
+🆔 𝐔𝐈𝐃 : ${styledUID}
 🚻 𝐆𝐞𝐧𝐝𝐞𝐫 : ${victimGender}
 🔗 𝐏𝐫𝐨𝐟𝐢𝐥𝐞 𝐋𝐢𝐧𝐤 :
-${profileLink}
+${rawProfileLink}
 
 ━━━━━━━━━━━━━━━━━━━━━
 
@@ -183,7 +180,6 @@ ${profileLink}
             },
             messageID
           );
-
         });
 
         writer.on("error", () => {
@@ -193,31 +189,21 @@ ${profileLink}
             messageID
           );
         });
-
       } catch (err) {
-
         console.log(err);
-
         api.sendMessage(
           "❌ Failed To Load Image!",
           threadID,
           messageID
         );
-
       }
-
     });
-
   } catch (error) {
-
     console.error(error);
-
     api.sendMessage(
       `❌ SYSTEM ERROR\n\n${error.message}`,
       event.threadID,
       event.messageID
     );
-
   }
-
 };
