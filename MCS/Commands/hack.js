@@ -1,100 +1,223 @@
 const fs = require("fs-extra");
-const path = require("path");
 const axios = require("axios");
-const { createCanvas, loadImage, registerFont } = require("canvas");
+const path = require("path");
 
 module.exports.config = {
   name: "hack",
-  version: "1.0.1",
-  role: 0,
+  aliases: ["cyberhack"],
+  version: "4.0.0",
   credit: "MOHAMMAD BADOL",
-  description: "Fake ID hack image বানায় reply/tag দিয়ে",
+  role: 0,
   prefix: true,
-  category: "Fun",
-  aliases: ["hacked"],
-  usages: "[@tag | reply]",
-  cooldown: 5
+  cooldown: 5,
+  description: "Advanced Fake Hacking Simulation",
+  category: "fun"
 };
 
-try {
-  registerFont(path.join(__dirname, "B4D9L", "BeVietnamPro.ttf"), { family: "BeVietnamPro" });
-} catch (e) {}
-
-module.exports.wrapText = async (ctx, text, maxWidth) => {
-  if (ctx.measureText(text).width <= maxWidth) return [text];
-  const words = text.split(' ');
-  const lines = [];
-  let line = '';
-  for (const word of words) {
-    const testLine = line? `${line} ${word}` : word;
-    if (ctx.measureText(testLine).width <= maxWidth) {
-      line = testLine;
-    } else {
-      if (line) lines.push(line);
-      line = word;
-    }
-  }
-  if (line) lines.push(line);
-  return lines;
-};
-
-// 🔥 ঠিক করা হইছে: onStart = async function (api, event, args)
 module.exports.onStart = async function (api, event, args) {
-  const { threadID, messageID, senderID, messageReply, type, mentions } = event;
-
-  const cacheDir = path.join(__dirname, "B4D9L");
-  const pathImg = path.join(cacheDir, `hack_${Date.now()}_${senderID}.png`);
-  await fs.ensureDir(cacheDir);
-
-  let id = type == "message_reply"? messageReply.senderID
-         : Object.keys(mentions).length > 0? Object.keys(mentions)[0]
-         : senderID;
-
   try {
-    const userInfo = await api.getUserInfo(id);
-    const name = userInfo[id].name;
 
-    const bgURL = "https://drive.google.com/uc?export=download&id=1RwJnJTzUmwOmP3N_mZzxtp63wbvt9bLZ";
-    const [avatarRes, bgRes] = await Promise.all([
-      axios.get(`https://graph.facebook.com/${id}/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662`, {
-        responseType: "arraybuffer",
-        timeout: 10000
-      }).catch(() => axios.get(`https://graph.facebook.com/${id}/picture?type=large`, { responseType: "arraybuffer" })),
-      axios.get(bgURL, { responseType: "arraybuffer", timeout: 15000 })
-    ]);
+    const {
+      threadID,
+      messageID,
+      senderID,
+      mentions,
+      type,
+      messageReply
+    } = event;
 
-    const baseImage = await loadImage(bgRes.data);
-    const avatar = await loadImage(avatarRes.data);
+    let targetID = senderID;
 
-    const canvas = createCanvas(baseImage.width, baseImage.height);
-    const ctx = canvas.getContext("2d");
-    ctx.drawImage(baseImage, 0, 0);
+    if (mentions && Object.keys(mentions).length > 0) {
+      targetID = Object.keys(mentions)[0];
+    }
 
-    ctx.font = "400 23px BeVietnamPro, Arial";
-    ctx.fillStyle = "#1878F3";
-    ctx.textAlign = "start";
-    const lines = await this.wrapText(ctx, name, 1160);
-    ctx.fillText(lines.join('\n'), 200, 497);
+    if (type === "message_reply" && messageReply) {
+      targetID = messageReply.senderID;
+    }
 
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(133, 487, 50, 0, Math.PI * 2);
-    ctx.closePath();
-    ctx.clip();
-    ctx.drawImage(avatar, 83, 437, 100, 100);
-    ctx.restore();
+    // আপনার ছবির Direct Link
+    const IMAGE_URL = "https://drive.google.com/uc?export=download&id=1DxAIX1MGBjeJDhbjK0QbNeGxUiEn33yu";
 
-    await fs.writeFile(pathImg, canvas.toBuffer("image/png"));
+    // Victim Information
 
-    return api.sendMessage({
-      body: `✅ ${name} এর আইডি হ্যাক সাকসেসফুল পাসওয়ার্ড ছাইম ভাই এর ইনবক্সে!`,
-      attachment: fs.createReadStream(pathImg)
-    }, threadID, () => {
-      fs.unlink(pathImg).catch(() => {});
-    }, messageID);
+    let victimName = "Unknown";
+    let victimGender = "Unknown";
+    let profileLink = `https://facebook.com/${targetID}`;
 
-  } catch (err) {
-    console.log("[HACK CMD ERROR]", err);
-    return api.sendMessage("❌ হ্যাক করতে গিয়ে এরর খাইছি বেটা, আবার ট্রাই কর।", threadID, messageID);
+    try {
+
+      const userInfo = await api.getUserInfo(targetID);
+
+      if (userInfo && userInfo[targetID]) {
+
+        victimName = userInfo[targetID].name || "Unknown";
+
+        if (userInfo[targetID].gender == 2)
+          victimGender = "Male";
+        else if (userInfo[targetID].gender == 1)
+          victimGender = "Female";
+
+      }
+
+    } catch (e) {
+      console.log(e);
+    }
+
+    const steps = [
+      "📡 Initializing SAEEM Cyber Engine...",
+      "🌐 Connecting Secure Server...",
+      "👤 Detecting Target...",
+      "📲 Reading Facebook Profile...",
+      "📂 Accessing Gallery...",
+      "💬 Reading Messenger...",
+      "📞 Syncing Contacts...",
+      "🌍 Tracking Location...",
+      "🔐 Bypassing Security...",
+      "📡 Uploading Report...",
+      "⚡ Finalizing...",
+      "✅ Simulation Completed."
+    ];
+
+    let loadingMessage;
+
+    api.sendMessage(steps[0], threadID, async (err, info) => {
+
+      if (err) return;
+
+      loadingMessage = info;
+
+      for (let i = 1; i < steps.length; i++) {
+
+        await new Promise(resolve => setTimeout(resolve, 1500));
+
+        try {
+
+          await api.editMessage(
+            `${steps[i]}
+
+██████████ ${Math.floor(((i + 1) / steps.length) * 100)}%`,
+            loadingMessage.messageID
+          );
+
+        } catch (e) {}
+
+      }
+
+      await new Promise(resolve => setTimeout(resolve, 1200));
+
+      const cacheDir = path.join(__dirname, "cache");
+      await fs.ensureDir(cacheDir);
+
+      const imagePath = path.join(
+        cacheDir,
+        `hack_${Date.now()}.jpg`
+      );
+
+      try {
+
+        const response = await axios({
+          url: IMAGE_URL,
+          method: "GET",
+          responseType: "stream"
+        });
+
+        const writer = fs.createWriteStream(imagePath);
+
+        response.data.pipe(writer);
+
+        writer.on("finish", async () => {
+
+          try {
+            await api.unsendMessage(loadingMessage.messageID);
+          } catch (e) {}
+
+          const result = `
+💀 𝐒𝐀𝐄𝐄𝐌 𝐂𝐘𝐁𝐄𝐑 𝐄𝐍𝐆𝐈𝐍𝐄 💀
+━━━━━━━━━━━━━━━━━━━━━
+
+👤 ‎𝐍𝐚𝐦𝐞 : ${victimName}
+🆔 𝐔𝐈𝐃 : ${targetID}
+🚻 𝐆𝐞𝐧𝐝𝐞𝐫 : ${victimGender}
+🔗 𝐏𝐫𝐨𝐟𝐢𝐥𝐞 𝐋𝐢𝐧𝐤 :
+${profileLink}
+
+━━━━━━━━━━━━━━━━━━━━━
+
+🛰️ 𝐂𝐄𝐍𝐓𝐑𝐀𝐋 𝐂𝐋𝐎𝐔𝐃 🧚 𝐇𝐎𝐒𝐓 𝐒𝐀𝐄𝐄𝐌-𝐅𝐑𝐀𝐌𝐄 ✅ 𝐒𝐄𝐑𝐕𝐄𝐑
+
+━━━━━━━━━━━━━━━━━━━━━
+
+📂 𝐆𝐚𝐥𝐥𝐞𝐫𝐲 𝐒𝐜𝐚𝐧 ✅
+💬 𝐌𝐞𝐬𝐬𝐞𝐧𝐠𝐞𝐫 𝐒𝐜𝐚𝐧 ✅
+📞 𝐂𝐨𝐧𝐭𝐚𝐜𝐭𝐬 𝐒𝐜𝐚𝐧 ✅
+📸 𝐏𝐡𝐨𝐭𝐨𝐬 𝐒𝐜𝐚𝐧 ✅
+🌍 𝐋𝐨𝐜𝐚𝐭𝐢𝐨𝐧 𝐒𝐜𝐚𝐧 ✅
+📡 𝐈𝐏 𝐀𝐝𝐝𝐫𝐞𝐬𝐬 𝐒𝐜𝐚𝐧 ✅
+🔐 𝐒𝐞𝐜𝐮𝐫𝐢𝐭𝐲 𝐒𝐜𝐚𝐧 ✅
+☁ 𝐂𝐥𝐨𝐮𝐝 𝐔𝐩𝐥𝐨𝐚𝐝 ✅
+⚡ 𝐒𝐞𝐬𝐬𝐢𝐨𝐧 𝐒𝐲𝐧𝐜 ✅
+🛰 𝐃𝐞𝐯𝐢𝐜𝐞 𝐀𝐧𝐚𝐥𝐲𝐬𝐢𝐬 ✅
+
+━━━━━━━━━━━━━━━━━━━━━
+
+‎⚠️ [𝐈𝐌𝐏𝐎𝐑𝐓𝐀𝐍𝐓 𝐍𝐎𝐓𝐈𝐂𝐄]
+‎𝐀𝐥𝐥 𝐦𝐞𝐭𝐚𝐝𝐚𝐭𝐚 𝐚𝐧𝐝 𝐬𝐲𝐬𝐭𝐞𝐦 𝐝𝐮𝐦𝐩 𝐟𝐢𝐥𝐞𝐬 𝐨𝐟 𝐭𝐡𝐢𝐬 𝐚𝐜𝐜𝐨𝐮𝐧𝐭 𝐡𝐚𝐯𝐞 𝐛𝐞𝐞𝐧 𝐬𝐮𝐜𝐜𝐞𝐬𝐬𝐟𝐮𝐥𝐥𝐲 𝐭𝐫𝐚𝐧𝐬𝐟𝐞𝐫𝐫𝐞𝐝 𝐭𝐨 𝐬𝐚𝐞𝐞𝐦 𝐬𝐡𝐞𝐢𝐤𝐡 𝐬𝐞𝐜𝐮𝐫𝐞𝐝 𝐡𝐨𝐬𝐭𝐢𝐧𝐠 𝐝𝐚𝐭𝐚𝐛𝐚𝐬𝐞.
+
+‎🛑 [𝐖𝐀𝐑𝐍𝐈𝐍𝐆] অ্যাকাউন্টটি বর্তমানে ছাইম বসের স্কুইড সার্ভার 🖇️ এ রয়েছে। পরবর্তী ১০ মিনিটের মধ্যে ছাইম বসকে 😹একটা Gf অথবা তোমার গার্লফ্রেন্ড ☺️ ট্রিট না দিলে, 🫣সমস্ত গোপন চ্যাট হিস্ট্রি গ্রুপে লিক করে দেওয়া হবে! 😉
+
+━━━━━━━━━━━━━━━━━━━━━
+‎👤 𝐂𝐑𝐄𝐃𝐈𝐓 𝐁𝐘 𝐒𝐀𝐄𝐄𝐌-𝐁𝐎𝐓-𝐕𝟓`;
+
+          api.sendMessage(
+            {
+              body: result,
+              attachment: fs.createReadStream(imagePath)
+            },
+            threadID,
+            () => {
+              try {
+                if (fs.existsSync(imagePath))
+                  fs.unlinkSync(imagePath);
+              } catch (e) {}
+            },
+            messageID
+          );
+
+        });
+
+        writer.on("error", () => {
+          api.sendMessage(
+            "❌ Image Download Failed!",
+            threadID,
+            messageID
+          );
+        });
+
+      } catch (err) {
+
+        console.log(err);
+
+        api.sendMessage(
+          "❌ Failed To Load Image!",
+          threadID,
+          messageID
+        );
+
+      }
+
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    api.sendMessage(
+      `❌ SYSTEM ERROR\n\n${error.message}`,
+      event.threadID,
+      event.messageID
+    );
+
   }
+
 };
