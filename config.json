@@ -6,10 +6,10 @@
     "NOTICE": "ওনার ইনফো চেঞ্জ করো না। বট চলবে না।"
   },
   "BOT_INFO": {
-    "NAME": "𝄞⋆⃝🧚𝐒𝐀𝐄𝐄𝐌-𝐁𝐎𝐓-𝐕𝟓🧚‍⋆⃝𝄞",
-    "PREFIX": "$",
+    "NAME": "𝄞⋆⃝🧚VK-𝐁𝐎𝐓-🧚‍⋆⃝𝄞",
+    "PREFIX": ".",
     "VERSION": "5.2.1",
-    "OWNER": "SAEEM SHEIKH"
+    "OWNER": "VK.ALAMIN"
   },
   "ADMIN_SYSTEM": {
     "ADMINS": ["100022291393952", "61591265887748"],
